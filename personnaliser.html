@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personnaliser – Rosana</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .grille-motifs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .carte-motif {
+      background: white;
+      border: 2px solid #e8d0d5;
+      border-radius: 12px;
+      padding: 15px 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .carte-motif:hover { border-color: #b5546a; transform: translateY(-2px); }
+    .carte-motif.selectionne { border-color: #b5546a; background: #fdf0f3; }
+    .carte-motif canvas { display: block; margin: 0 auto 8px; border-radius: 50%; }
+    .carte-motif span { font-size: 0.82rem; color: #555; }
+    .carte-motif.selectionne span { color: #b5546a; font-weight: bold; }
+
+    .apercu-central {
+      display: flex;
+      justify-content: center;
+      margin: 25px 0 20px;
+    }
+    #apercu-canvas {
+      border-radius: 50%;
+      box-shadow: 0 6px 25px rgba(181,84,106,0.18);
+    }
+
+    .choix-couleurs { display: none; margin-top: 10px; }
+    .choix-couleurs.visible { display: block; }
+
+    .ligne-zone {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .label-zone { font-size: 0.88rem; color: #555; min-width: 120px; flex-shrink: 0; }
+    .ronds-palette { display: flex; gap: 8px; flex-wrap: wrap; }
+    .rond-pal {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .rond-pal:hover { transform: scale(1.12); }
+    .rond-pal.selectionne { border-color: #2c2c2c; transform: scale(1.18); }
+
+    .zone-special { display: none; margin-top: 12px; }
+    .zone-special.visible { display: block; }
+
+    textarea {
+      width: 100%;
+      border: 2px solid #e8d0d5;
+      border-radius: 12px;
+      padding: 12px 15px;
+      font-family: 'Georgia', serif;
+      font-size: 0.9rem;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    textarea:focus { border-color: #b5546a; }
+
+    .toggle-row { display: flex; gap: 12px; }
+    .zone-message { display: none; margin-top: 12px; }
+    .zone-message.visible { display: block; }
+    .compteur-car { text-align: right; font-size: 0.8rem; color: #999; margin-top: 5px; }
+
+    @media (max-width: 600px) {
+      .grille-motifs { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">Rosana</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="boutique.html">Boutique</a></li>
+      <li><a href="personnaliser.html">Personnaliser</a></li>
+      <li><a href="panier.html" class="panier-btn">🛒 Panier (<span id="nb-panier">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <div class="personnalisation">
+    <h2>Crée ton bouquet</h2>
+    <p class="sous-titre">Choisis ta taille, ton motif et tes couleurs.</p>
+
+    <!-- ÉTAPE 1 -->
+    <div class="etape">
+      <h3><span class="numero">1</span> Taille du bouquet</h3>
+      <div class="grille-tailles">
+        <button class="btn-taille" onclick="choisirTaille(this,7,9)">
+          <span class="nb-roses">7 roses</span><span class="prix-taille">9€</span>
+        </button>
+        <button class="btn-taille" onclick="choisirTaille(this,19,24)">
+          <span class="nb-roses">19 roses</span><span class="prix-taille">24€</span>
+        </button>
+        <button class="btn-taille" onclick="choisirTaille(this,37,45)">
+          <span class="nb-roses">37 roses</span><span class="prix-taille">45€</span>
+        </button>
+        <button class="btn-taille" onclick="choisirTaille(this,61,72)">
+          <span class="nb-roses">61 roses</span><span class="prix-taille">72€</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 2 -->
+    <div class="etape" id="etape-motif" style="display:none;">
+      <h3><span class="numero">2</span> Motif et couleurs</h3>
+      <div class="grille-motifs" id="grille-motifs"></div>
+
+     <div class="zone-special" id="zone-initiales">
+  <p style="font-size:0.88rem;color:#555;margin-bottom:8px;">
+    Écris le prénom ou les initiales à afficher :
+  </p>
+  <input type="text" id="texte-initiales" maxlength="6"
+    placeholder="Ex : Sophie, J&S, ML..."
+    style="width:100%;border:2px solid #e8d0d5;border-radius:12px;
+           padding:12px 15px;font-family:'Georgia',serif;font-size:1rem;
+           outline:none;transition:border-color 0.2s;"
+    onfocus="this.style.borderColor='#b5546a'"
+    onblur="this.style.borderColor='#e8d0d5'">
+</div>
+
+<div class="zone-special" id="zone-special">
+  <p style="font-size:0.88rem;color:#555;margin-bottom:8px;">Décris ton motif sur mesure :</p>
+  <textarea id="texte-special" rows="3" maxlength="200"
+    placeholder="Ex : une étoile au centre, un croissant de lune..."></textarea>
+</div>
+
+      <div class="choix-couleurs" id="choix-couleurs">
+        <p style="font-size:0.88rem;font-weight:bold;color:#555;margin-bottom:12px;">Choisis les couleurs :</p>
+        <div id="lignes-zones"></div>
+      </div>
+
+      <div class="apercu-central">
+        <canvas id="apercu-canvas" width="240" height="240"></canvas>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 3 -->
+    <div class="etape" id="etape-options" style="display:none;">
+      <h3><span class="numero">3</span> Options</h3>
+
+      <p style="font-size:0.9rem;font-weight:bold;color:#2c2c2c;margin-bottom:4px;">✨ Paillettes</p>
+      <p style="font-size:0.85rem;color:#999;margin-bottom:20px;">Incluses dans tous nos bouquets.</p>
+
+      <p style="font-size:0.9rem;font-weight:bold;color:#2c2c2c;margin-bottom:10px;">🌸 Petites fleurs (+4€)</p>
+      <div class="toggle-row">
+        <button class="btn-toggle selectionne" onclick="toggleOpt(this,'petites',false)">Sans</button>
+        <button class="btn-toggle" onclick="toggleOpt(this,'petites',true)">Avec (+4€)</button>
+      </div>
+      <div class="zone-message" id="zone-petites">
+        <textarea rows="2" id="texte-petites" maxlength="50"
+          placeholder="Ex : prénom 'Sophie', une étoile..."></textarea>
+      </div>
+
+      <p style="font-size:0.9rem;font-weight:bold;color:#2c2c2c;margin:20px 0 10px;">💌 Carte message (+1€)</p>
+      <div class="toggle-row">
+        <button class="btn-toggle selectionne" onclick="toggleOpt(this,'carte',false)">Sans</button>
+        <button class="btn-toggle" onclick="toggleOpt(this,'carte',true)">Avec (+1€)</button>
+      </div>
+      <div class="zone-message" id="zone-carte">
+        <textarea rows="3" id="texte-carte" maxlength="200" placeholder="Ton message..."></textarea>
+        <div class="compteur-car"><span id="nb-carte">0</span>/200</div>
+      </div>
+
+      <p style="font-size:0.9rem;font-weight:bold;color:#2c2c2c;margin:20px 0 10px;">📝 Recommandations libres</p>
+      <textarea rows="3" id="recommandations" maxlength="500"
+        placeholder="Inspiration, occasion spéciale, disposition particulière..."
+        oninput="document.getElementById('nb-reco').textContent=this.value.length"></textarea>
+      <div class="compteur-car"><span id="nb-reco">0</span>/500</div>
+    </div>
+
+    <!-- RÉCAPITULATIF -->
+    <div class="recapitulatif" id="recapitulatif" style="display:none;">
+      <h3>Récapitulatif</h3>
+      <div class="ligne-recap"><span>Bouquet</span><span id="recap-bouquet">–</span></div>
+      <div class="ligne-recap"><span>Motif</span><span id="recap-motif">–</span></div>
+      <div class="ligne-recap"><span>Couleurs</span><span id="recap-couleurs">–</span></div>
+      <div class="ligne-recap"><span>✨ Paillettes</span><span>Incluses</span></div>
+      <div class="ligne-recap"><span>🌸 Petites fleurs</span><span id="recap-petites">Non</span></div>
+      <div class="ligne-recap"><span>💌 Carte message</span><span id="recap-carte">Non</span></div>
+      <div class="ligne-recap"><span>Total</span><span id="recap-total">–</span></div>
+    </div>
+
+    <button class="btn-ajouter-perso" id="btn-ajouter"
+      onclick="ajouterAuPanierPerso()" disabled style="display:none;">
+      Ajouter au panier →
+    </button>
+  </div>
+
+  <footer>
+    <p>© 2025 Rosana – Fait avec ❤️ | <a href="#">Instagram</a></p>
+  </footer>
+
+  <script src="panier.js"></script>
+  <script>
+  const COULEURS = [
+    { nom:'Rouge',  hex:'#c0392b' },
+    { nom:'Rose',   hex:'#e8829a' },
+    { nom:'Blanc',  hex:'#f5f0f0' },
+    { nom:'Violet', hex:'#8e44ad' },
+    { nom:'Bleu',   hex:'#2980b9' },
+    { nom:'Jaune',  hex:'#f1c40f' },
+  ];
+
+  // ===== FONCTIONS DE DESSIN =====
+  function cerclePlein(ctx, S, couleur) {
+    ctx.clearRect(0, 0, S, S);
+    ctx.beginPath();
+    ctx.arc(S/2, S/2, S/2 - 2, 0, Math.PI*2);
+    ctx.fillStyle = couleur || '#f0e0e5';
+    ctx.fill();
+    ctx.strokeStyle = '#e8d0d5';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
+  function dessinerCoeur(ctx, S, couleur) {
+    const scale = S * 0.22;
+    ctx.save();
+    ctx.translate(S/2, S/2 - scale*0.05);
+    ctx.scale(scale, scale);
+    ctx.beginPath();
+    for (let t = 0; t <= Math.PI*2; t += 0.01) {
+      const x =  16 * Math.pow(Math.sin(t), 3) / 16;
+      const y = -(13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t)) / 16;
+      t < 0.02 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = couleur || '#f0e0e5';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function dessinerSpirale(ctx, S, couleur) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(S/2, S/2, S/2 - 2, 0, Math.PI*2);
+    ctx.clip();
+    for (let bras = 0; bras < 3; bras++) {
+      const offset = (bras * Math.PI * 2) / 3;
+      ctx.beginPath();
+      for (let t = 0; t <= Math.PI*2.5; t += 0.04) {
+        const r = (t / (Math.PI*3)) * (S/2 - 5);
+        const x = S/2 + r * Math.cos(t + offset);
+        const y = S/2 + r * Math.sin(t + offset);
+        t < 0.05 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = couleur || '#f0e0e5';
+      ctx.lineWidth = Math.max(S * 0.07, 4);
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function dessinerDamier(ctx, S, couleur) {
+    const tc = S * 0.13;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(S/2, S/2, S/2 - 2, 0, Math.PI*2);
+    ctx.clip();
+    const nb = Math.ceil(S / tc) + 1;
+    for (let r = 0; r < nb; r++) {
+      for (let c = 0; c < nb; c++) {
+        if ((r + c) % 2 === 0) {
+          ctx.fillStyle = couleur || '#f0e0e5';
+          ctx.fillRect(c * tc, r * tc, tc, tc);
+        }
+      }
+    }
+    ctx.restore();
+  }
+
+  function dessinerInitiales(ctx, S, couleur, txt) {
+    ctx.font = `bold ${S*0.28}px Georgia`;
+    ctx.fillStyle = couleur || '#b5546a';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText((txt||'AB').substring(0,3).toUpperCase(), S/2, S/2);
+  }
+
+  function dessinerSurMesure(ctx, S) {
+    ctx.font = `${S*0.09}px Georgia`;
+    ctx.fillStyle = 'rgba(181,84,106,0.5)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('✦ Sur mesure', S/2, S/2);
+  }
+
+  // ===== MOTIFS =====
+  const MOTIFS = [
+    {
+      id:'uni', nom:'Uni',
+      zones:['Bouquet'],
+      draw(ctx, S, c) { cerclePlein(ctx, S, c[0]); }
+    },
+    {
+      id:'couronne', nom:'Couronne',
+      zones:['Extérieur','Centre'],
+      draw(ctx, S, c) {
+        cerclePlein(ctx, S, c[0]);
+        ctx.beginPath();
+        ctx.arc(S/2, S/2, S*0.30, 0, Math.PI*2);
+        ctx.fillStyle = c[1]||'#f0e0e5'; ctx.fill();
+      }
+    },
+    {
+      id:'coeur', nom:'Cœur',
+      zones:['Fond','Cœur'],
+      draw(ctx, S, c) { cerclePlein(ctx, S, c[0]); dessinerCoeur(ctx, S, c[1]); }
+    },
+    {
+      id:'spirale', nom:'Spirale',
+      zones:['Fond','Spirale'],
+      draw(ctx, S, c) { cerclePlein(ctx, S, c[0]); dessinerSpirale(ctx, S, c[1]); }
+    },
+    {
+      id:'damier', nom:'Damier',
+      zones:['Couleur A','Couleur B'],
+      draw(ctx, S, c) { cerclePlein(ctx, S, c[0]); dessinerDamier(ctx, S, c[1]); }
+    },
+    {
+      id:'initiales', nom:'Initiales',
+      zones:['Fond','Initiales'],
+      draw(ctx, S, c) {
+        cerclePlein(ctx, S, c[0]);
+        dessinerInitiales(ctx, S, c[1], config.texteInitiales);
+      }
+    },
+    {
+      id:'special', nom:'Sur mesure',
+      zones:['Couleur principale'],
+      draw(ctx, S, c) { cerclePlein(ctx, S, c[0]); dessinerSurMesure(ctx, S); }
+    },
+  ];
+
+  // ===== ÉTAT =====
+  let config = {
+    roses:0, prix:0, motifId:null,
+    couleurs:{}, petitesFleurs:false,
+    avecCarte:false, texteInitiales:'AB',
+  };
+
+  // ===== TAILLE =====
+  function choisirTaille(btn, roses, prix) {
+    document.querySelectorAll('.btn-taille').forEach(b => b.classList.remove('selectionne'));
+    btn.classList.add('selectionne');
+    config.roses = roses; config.prix = prix;
+    config.motifId = null; config.couleurs = {};
+    ['etape-motif','etape-options','recapitulatif'].forEach(id => {
+      document.getElementById(id).style.display = 'block';
+    });
+    document.getElementById('btn-ajouter').style.display = 'block';
+    construireGrilleMotifs();
+    mettreAJourRecap();
+    verifierFormulaire();
+  }
+
+  // ===== GRILLE =====
+  function construireGrilleMotifs() {
+    const grille = document.getElementById('grille-motifs');
+    grille.innerHTML = '';
+    MOTIFS.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'carte-motif';
+      div.id = 'motif-' + m.id;
+      div.onclick = () => choisirMotif(m.id);
+      const cv = document.createElement('canvas');
+      cv.width = cv.height = 80;
+      m.draw(cv.getContext('2d'), 80, ['#f0d0d8','#d4a0b0','#e8b8c8']);
+      div.appendChild(cv);
+      const sp = document.createElement('span');
+      sp.textContent = m.nom;
+      div.appendChild(sp);
+      grille.appendChild(div);
+    });
+  }
+
+  function zoneId(z) { return z.replace(/[^a-zA-Z0-9]/g,'_'); }
+
+  function choisirMotif(motifId) {
+    config.motifId = motifId; config.couleurs = {};
+    document.querySelectorAll('.carte-motif').forEach(c => c.classList.remove('selectionne'));
+    document.getElementById('motif-' + motifId).classList.add('selectionne');
+    document.getElementById('zone-special').classList.toggle('visible', motifId === 'special');
+    document.getElementById('zone-initiales').classList.toggle('visible', motifId === 'initiales');
+
+    const motif = MOTIFS.find(m => m.id === motifId);
+    const lignes = document.getElementById('lignes-zones');
+    lignes.innerHTML = '';
+    motif.zones.forEach(zone => {
+      const div = document.createElement('div');
+      div.className = 'ligne-zone';
+      div.innerHTML = `<span class="label-zone">${zone}</span><div class="ronds-palette" id="pal-${zoneId(zone)}"></div>`;
+      lignes.appendChild(div);
+      const pal = document.getElementById('pal-' + zoneId(zone));
+      COULEURS.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'rond-pal';
+        btn.style.background = c.hex;
+        btn.title = c.nom;
+        if (c.nom === 'Blanc') btn.style.outline = '1px solid #ccc';
+        btn.onclick = () => choisirCouleurZone(zone, c.hex, c.nom);
+        pal.appendChild(btn);
+      });
+    });
+
+    document.getElementById('choix-couleurs').classList.add('visible');
+    rafraichirApercu();
+    mettreAJourRecap();
+    verifierFormulaire();
+  }
+
+  function choisirCouleurZone(zone, hex, nom) {
+    config.couleurs[zone] = hex;
+    const pal = document.getElementById('pal-' + zoneId(zone));
+    if (pal) pal.querySelectorAll('.rond-pal').forEach(b => {
+      b.classList.toggle('selectionne', b.title === nom);
+    });
+    rafraichirApercu();
+    mettreAJourRecap();
+    verifierFormulaire();
+  }
+
+  function rafraichirApercu() {
+    const cv = document.getElementById('apercu-canvas');
+    if (!cv || !config.motifId) return;
+    const motif = MOTIFS.find(m => m.id === config.motifId);
+    const couleurs = motif.zones.map(z => config.couleurs[z] || '#f0e0e5');
+    motif.draw(cv.getContext('2d'), cv.width, couleurs);
+    const mini = document.querySelector(`#motif-${config.motifId} canvas`);
+    if (mini) motif.draw(mini.getContext('2d'), 80, couleurs);
+  }
+
+  // ===== OPTIONS =====
+  function toggleOpt(btn, type, valeur) {
+    btn.closest('.toggle-row').querySelectorAll('.btn-toggle')
+      .forEach(b => b.classList.remove('selectionne'));
+    btn.classList.add('selectionne');
+    if (type === 'petites') {
+      config.petitesFleurs = valeur;
+      document.getElementById('zone-petites').classList.toggle('visible', valeur);
+    } else {
+      config.avecCarte = valeur;
+      document.getElementById('zone-carte').classList.toggle('visible', valeur);
+    }
+    mettreAJourRecap();
+  }
+
+  // ===== RÉCAP =====
+  function nomCouleur(hex) {
+    return (COULEURS.find(c => c.hex === hex)||{}).nom || hex;
+  }
+
+  function mettreAJourRecap() {
+    if (!config.roses) return;
+    document.getElementById('recap-bouquet').textContent = `${config.roses} roses – ${config.prix}€`;
+    if (config.motifId) {
+      const motif = MOTIFS.find(m => m.id === config.motifId);
+      document.getElementById('recap-motif').textContent = motif.nom;
+      document.getElementById('recap-couleurs').textContent =
+        motif.zones.map(z => `${z} : ${config.couleurs[z] ? nomCouleur(config.couleurs[z]) : '–'}`).join(' / ');
+    }
+    document.getElementById('recap-petites').textContent = config.petitesFleurs ? 'Oui (+4€)' : 'Non';
+    document.getElementById('recap-carte').textContent   = config.avecCarte     ? 'Oui (+1€)' : 'Non';
+    let total = config.prix;
+    if (config.petitesFleurs) total += 4;
+    if (config.avecCarte)     total += 1;
+    document.getElementById('recap-total').textContent = `${total}€`;
+  }
+
+  // ===== VALIDATION =====
+  function verifierFormulaire() {
+    if (!config.motifId || !config.roses) {
+      document.getElementById('btn-ajouter').disabled = true; return;
+    }
+    const motif = MOTIFS.find(m => m.id === config.motifId);
+    document.getElementById('btn-ajouter').disabled = !motif.zones.every(z => config.couleurs[z]);
+  }
+
+  // ===== PANIER =====
+  function ajouterAuPanierPerso() {
+    const motif = MOTIFS.find(m => m.id === config.motifId);
+    let total = config.prix;
+    if (config.petitesFleurs) total += 4;
+    if (config.avecCarte)     total += 1;
+    const couleursDesc = motif.zones.map(z => nomCouleur(config.couleurs[z])).join('/');
+    const nom = `Bouquet ${config.roses} roses – ${motif.nom} – ${couleursDesc}`
+      + (config.petitesFleurs ? ' 🌸':'') + (config.avecCarte ? ' 💌':'');
+    const id = 'perso-' + Date.now();
+    const cv = document.getElementById('apercu-canvas');
+    if (cv) localStorage.setItem('rosana-image-' + id, cv.toDataURL());
+    const reco = document.getElementById('recommandations').value;
+    if (reco) localStorage.setItem('rosana-reco-' + id, reco);
+    const txtP = document.getElementById('texte-petites').value;
+    if (config.petitesFleurs && txtP) localStorage.setItem('rosana-petitesfleurs-' + id, txtP);
+    const txtC = document.getElementById('texte-carte').value;
+    if (config.avecCarte && txtC) localStorage.setItem('rosana-message-' + id, txtC);
+    const txtS = document.getElementById('texte-special').value;
+    if (txtS) localStorage.setItem('rosana-special-' + id, txtS);
+    ajouterAuPanier(id, nom, total);
+  }
+
+  // Écoute les initiales
+  document.getElementById('texte-initiales').addEventListener('input', function() {
+  config.texteInitiales = this.value || '?';
+  if (config.motifId === 'initiales') rafraichirApercu();
+});
+document.getElementById('texte-special').addEventListener('input', function() {
+  if (config.motifId === 'special') rafraichirApercu();
+});
+  document.getElementById('texte-carte').addEventListener('input', function() {
+    document.getElementById('nb-carte').textContent = this.value.length;
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boutique – Rosana</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">Rosana</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="boutique.html">Boutique</a></li>
+      <li><a href="personnaliser.html">Personnaliser</a></li>
+      <li><a href="panier.html" class="panier-btn">🛒 Panier (<span id="nb-panier">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <section class="catalogue">
+    <h2>Nos bouquets</h2>
+    <div class="grille-produits" id="grille-produits"></div>
+  </section>
+
+  <footer>
+    <p>© 2025 Rosana – Fait avec ❤️ | <a href="#">Instagram</a></p>
+  </footer>
+
+  <!-- MODALE OPTIONS -->
+  <div class="overlay" id="overlay" onclick="fermerModale(event)">
+    <div class="modale">
+      <button class="modale-fermer" onclick="fermerModale()">✕</button>
+      <h3 id="modale-titre">Personnalise ton bouquet</h3>
+      <p class="sous-titre-modale" id="modale-sous-titre"></p>
+
+      <div class="option-modale">
+        <div class="option-modale-info">
+          <strong>✨ Paillettes</strong>
+          <span>Incluses dans votre bouquet</span>
+        </div>
+        <span style="color:#b5546a;font-weight:bold;font-size:0.9rem;">Offert</span>
+      </div>
+
+      <div class="option-modale">
+        <div class="option-modale-info">
+          <strong>🌸 Petites fleurs</strong>
+          <span>Pour écrire un prénom ou former un motif (+4€)</span>
+        </div>
+        <div class="toggle-option">
+          <button class="btn-opt selectionne" onclick="toggleOpt(this,'petites',false)">Non</button>
+          <button class="btn-opt" onclick="toggleOpt(this,'petites',true)">Oui</button>
+        </div>
+      </div>
+      <div class="zone-message-modale" id="zone-petites">
+        <textarea id="texte-petites" maxlength="50"
+          placeholder="Ex : prénom 'Sophie', une étoile..."></textarea>
+      </div>
+
+      <div class="option-modale">
+        <div class="option-modale-info">
+          <strong>💌 Carte message</strong>
+          <span>Un message personnalisé avec le bouquet (+1€)</span>
+        </div>
+        <div class="toggle-option">
+          <button class="btn-opt selectionne" onclick="toggleOpt(this,'carte',false)">Non</button>
+          <button class="btn-opt" onclick="toggleOpt(this,'carte',true)">Oui</button>
+        </div>
+      </div>
+      <div class="zone-message-modale" id="zone-carte">
+        <textarea id="texte-carte" maxlength="200"
+          placeholder="Écris ton message ici..."></textarea>
+      </div>
+
+      <div class="modale-prix">Total : <span id="modale-total">–</span></div>
+      <button class="btn-confirmer" onclick="confirmerAjout()">Ajouter au panier →</button>
+    </div>
+  </div>
+
+  <script src="panier.js"></script>
+  <script>
+    const COULEURS = [
+      { nom: 'Rouge',  hex: '#c0392b' },
+      { nom: 'Rose',   hex: '#e8829a' },
+      { nom: 'Blanc',  hex: '#f5f0f0', bordure: '#e0d0d0' },
+      { nom: 'Violet', hex: '#8e44ad' },
+      { nom: 'Bleu',   hex: '#2980b9' },
+      { nom: 'Jaune',  hex: '#f1c40f' },
+    ];
+
+    // =====================================================
+    // MODIFIE ICI pour ajouter/changer les produits
+    const produits = [
+      { id: 1, nom: "Bouquet Essentiel", roses: 7,  prix: 9  },
+      { id: 2, nom: "Bouquet Classique", roses: 19, prix: 24 },
+      { id: 3, nom: "Bouquet Généreux",  roses: 37, prix: 45 },
+      { id: 4, nom: "Bouquet Prestige",  roses: 61, prix: 72 },
+    ];
+    // =====================================================
+
+    const selection = {};
+
+    const grille = document.getElementById('grille-produits');
+    produits.forEach(p => {
+      grille.innerHTML += `
+        <div class="carte-produit">
+          <div class="img-wrapper">
+            <img id="img-${p.id}"
+              src="images/bouquet-${p.roses}-rouge.jpg"
+              alt="${p.nom}"
+              onerror="this.style.display='none'">
+          </div>
+          <div class="carte-produit-info">
+            <h3>${p.nom}</h3>
+            <div class="nb-roses">${p.roses} roses</div>
+            <div class="selecteur-couleur">
+              ${COULEURS.map(c => `
+                <button class="btn-couleur-boutique"
+                  id="btn-${p.id}-${c.nom}"
+                  title="${c.nom}"
+                  style="background:${c.hex};${c.bordure ? `outline:1px solid ${c.bordure};` : ''}"
+                  onclick="choisirCouleur(${p.id},'${c.nom}','${c.hex}')">
+                </button>
+              `).join('')}
+            </div>
+            <div class="couleur-choisie" id="label-${p.id}">Choisis une couleur</div>
+            <div class="prix">${p.prix}€</div>
+            <button class="btn-ajout" id="ajout-${p.id}" disabled
+              onclick="ouvrirModale(${p.id})">
+              Ajouter au panier
+            </button>
+          </div>
+        </div>`;
+    });
+
+    function choisirCouleur(produitId, nomCouleur, hex) {
+      selection[produitId] = {
+        nom: nomCouleur,
+        hex: hex,
+        image: `images/bouquet-${produits.find(p=>p.id===produitId).roses}-${nomCouleur.toLowerCase()}.jpg`
+      };
+      const img = document.getElementById('img-' + produitId);
+      img.style.opacity = '0';
+      setTimeout(() => { img.src = selection[produitId].image; img.style.opacity = '1'; }, 150);
+      COULEURS.forEach(c => {
+        const btn = document.getElementById(`btn-${produitId}-${c.nom}`);
+        if (btn) btn.classList.toggle('selectionne', c.nom === nomCouleur);
+      });
+      document.getElementById('label-' + produitId).textContent = `Couleur : ${nomCouleur}`;
+      document.getElementById('ajout-' + produitId).disabled = false;
+    }
+
+    // ===== MODALE =====
+    let produitEnCours = null;
+    let optPetites = false;
+    let optCarte   = false;
+
+    function ouvrirModale(produitId) {
+      produitEnCours = produitId;
+      const p = produits.find(x => x.id === produitId);
+      const couleur = selection[produitId];
+      optPetites = false;
+      optCarte   = false;
+      document.getElementById('texte-petites').value = '';
+      document.getElementById('texte-carte').value   = '';
+      document.getElementById('zone-petites').classList.remove('visible');
+      document.getElementById('zone-carte').classList.remove('visible');
+      document.querySelectorAll('.toggle-option').forEach(tog => {
+        tog.querySelectorAll('.btn-opt')[0].classList.add('selectionne');
+        tog.querySelectorAll('.btn-opt')[1].classList.remove('selectionne');
+      });
+      document.getElementById('modale-titre').textContent = p.nom;
+      document.getElementById('modale-sous-titre').textContent =
+        `${p.roses} roses – ${couleur.nom} – Paillettes incluses`;
+      mettreAJourPrixModale(p.prix);
+      document.getElementById('overlay').classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function fermerModale(e) {
+      if (e && e.target !== document.getElementById('overlay')) return;
+      document.getElementById('overlay').classList.remove('visible');
+      document.body.style.overflow = '';
+      produitEnCours = null;
+    }
+
+    function toggleOpt(btn, type, valeur) {
+      const parent = btn.closest('.toggle-option');
+      parent.querySelectorAll('.btn-opt').forEach(b => b.classList.remove('selectionne'));
+      btn.classList.add('selectionne');
+      if (type === 'petites') {
+        optPetites = valeur;
+        document.getElementById('zone-petites').classList.toggle('visible', valeur);
+      } else {
+        optCarte = valeur;
+        document.getElementById('zone-carte').classList.toggle('visible', valeur);
+      }
+      const p = produits.find(x => x.id === produitEnCours);
+      mettreAJourPrixModale(p.prix);
+    }
+
+    function mettreAJourPrixModale(prixBase) {
+      let total = prixBase;
+      if (optPetites) total += 4;
+      if (optCarte)   total += 1;
+      document.getElementById('modale-total').textContent = total + '€';
+    }
+
+    function confirmerAjout() {
+      const p       = produits.find(x => x.id === produitEnCours);
+      const couleur = selection[produitEnCours];
+      let total = p.prix;
+      if (optPetites) total += 4;
+      if (optCarte)   total += 1;
+      const suffixes = [couleur.nom, optPetites?'🌸':'', optCarte?'💌':''].filter(Boolean).join(' ');
+      const nom    = `${p.nom} – ${suffixes}`;
+      const itemId = `boutique-${p.id}-${couleur.nom}-${Date.now()}`;
+      localStorage.setItem('rosana-image-' + itemId, couleur.image);
+      if (optPetites && document.getElementById('texte-petites').value)
+        localStorage.setItem('rosana-petitesfleurs-' + itemId, document.getElementById('texte-petites').value);
+      if (optCarte && document.getElementById('texte-carte').value)
+        localStorage.setItem('rosana-message-' + itemId, document.getElementById('texte-carte').value);
+      ajouterAuPanier(itemId, nom, total);
+      document.getElementById('overlay').classList.remove('visible');
+      document.body.style.overflow = '';
+      produitEnCours = null;
+    }
+  </script>
+</body>
+</html>

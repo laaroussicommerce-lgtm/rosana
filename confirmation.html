@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commande confirmée – Rosana</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-confirmation {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 60px 30px;
+      text-align: center;
+    }
+
+    .icone-succes {
+      width: 80px;
+      height: 80px;
+      background: #e8f8f0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 25px;
+    }
+
+    .page-confirmation h2 {
+      font-size: 2rem;
+      color: #b5546a;
+      margin-bottom: 10px;
+    }
+
+    .page-confirmation .sous-titre {
+      color: #999;
+      font-size: 1rem;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .numero-commande {
+      background: #fdf0f3;
+      border: 2px solid #e8d0d5;
+      border-radius: 12px;
+      padding: 15px 25px;
+      display: inline-block;
+      margin-bottom: 35px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .numero-commande strong {
+      color: #b5546a;
+      font-size: 1.1rem;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .bloc-confirmation {
+      background: #fdf8f9;
+      border-radius: 15px;
+      padding: 25px 30px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .bloc-confirmation h3 {
+      color: #b5546a;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f0e6e6;
+    }
+
+    .ligne-info {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 0;
+      font-size: 0.9rem;
+      color: #555;
+      border-bottom: 1px solid #fdf0f3;
+      gap: 15px;
+    }
+
+    .ligne-info:last-child { border-bottom: none; }
+    .ligne-info span:first-child { color: #999; flex-shrink: 0; }
+    .ligne-info span:last-child { text-align: right; }
+
+    .article-conf {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #fdf0f3;
+      font-size: 0.88rem;
+      color: #555;
+    }
+    .article-conf:last-child { border-bottom: none; }
+    .article-conf img {
+      width: 45px;
+      height: 45px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .article-conf .art-nom { flex: 1; }
+    .article-conf .art-prix {
+      font-weight: bold;
+      color: #b5546a;
+      flex-shrink: 0;
+    }
+
+    .total-confirmation {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0 0;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #b5546a;
+      border-top: 2px solid #f0e6e6;
+      margin-top: 10px;
+    }
+
+    .avertissement-date-conf {
+      background: #fff8e1;
+      border: 1px solid #f1c40f;
+      border-radius: 10px;
+      padding: 12px 15px;
+      font-size: 0.85rem;
+      color: #856404;
+      margin-top: 10px;
+      text-align: left;
+      line-height: 1.5;
+    }
+
+    .btn-retour {
+      display: inline-block;
+      background: #b5546a;
+      color: white;
+      padding: 15px 40px;
+      border-radius: 30px;
+      font-size: 1rem;
+      margin-top: 30px;
+      transition: background 0.2s;
+    }
+    .btn-retour:hover { background: #9a3d55; }
+
+    .email-info {
+      font-size: 0.85rem;
+      color: #999;
+      margin-top: 15px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .page-confirmation { padding: 40px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">Rosana</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="boutique.html">Boutique</a></li>
+      <li><a href="personnaliser.html">Personnaliser</a></li>
+      <li><a href="panier.html" class="panier-btn">🛒 Panier (<span id="nb-panier">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-confirmation">
+
+    <div class="icone-succes">✅</div>
+
+    <h2>Commande confirmée !</h2>
+    <p class="sous-titre">
+      Merci pour ta commande. Nous allons préparer ton bouquet avec soin
+      et te contacter dès qu'il est expédié.
+    </p>
+
+    <div class="numero-commande">
+      Numéro de commande
+      <strong id="numero-commande">–</strong>
+    </div>
+
+    <!-- ARTICLES -->
+    <div class="bloc-confirmation">
+      <h3>🌸 Articles commandés</h3>
+      <div id="articles-conf"></div>
+      <div class="total-confirmation">
+        <span>Sous-total</span>
+        <span id="conf-sous-total">–</span>
+      </div>
+    </div>
+
+    <!-- LIVRAISON -->
+    <div class="bloc-confirmation">
+      <h3>🚚 Livraison</h3>
+      <div class="ligne-info">
+        <span>Mode</span>
+        <span id="conf-mode-livraison">–</span>
+      </div>
+      <div class="ligne-info">
+        <span>Adresse</span>
+        <span id="conf-adresse">–</span>
+      </div>
+      <div class="ligne-info">
+        <span>Frais de livraison</span>
+        <span id="conf-frais-livraison">–</span>
+      </div>
+      <div class="ligne-info" style="font-weight:bold; color:#b5546a;">
+        <span>Total payé</span>
+        <span id="conf-total">–</span>
+      </div>
+    </div>
+
+    <!-- DATE -->
+    <div class="bloc-confirmation">
+      <h3>📅 Date de livraison souhaitée</h3>
+      <div class="ligne-info">
+        <span>Date</span>
+        <span id="conf-date">–</span>
+      </div>
+      <div id="conf-avert-date" class="avertissement-date-conf" style="display:none;">
+        ⚠️ Tu nous as indiqué que cette date est dans moins de 2 semaines.
+        Nous ferons notre maximum mais la livraison à cette date exacte
+        ne peut pas être garantie.
+      </div>
+      <div class="ligne-info" id="conf-note-row" style="display:none;">
+        <span>Note</span>
+        <span id="conf-note">–</span>
+      </div>
+    </div>
+
+    <!-- COORDONNÉES -->
+    <div class="bloc-confirmation">
+      <h3>👤 Tes coordonnées</h3>
+      <div class="ligne-info">
+        <span>Nom</span>
+        <span id="conf-nom">–</span>
+      </div>
+      <div class="ligne-info">
+        <span>Email</span>
+        <span id="conf-email">–</span>
+      </div>
+      <div class="ligne-info">
+        <span>Téléphone</span>
+        <span id="conf-tel">–</span>
+      </div>
+    </div>
+
+    <p class="email-info">
+      Un récapitulatif de ta commande sera envoyé à ton adresse email.<br>
+      Pour toute question : <a href="contact.html" style="color:#b5546a;">contacte-nous</a>
+    </p>
+
+    <a href="index.html" class="btn-retour">Retour à l'accueil</a>
+
+  </div>
+
+  <footer>
+    <p>© 2025 Rosana – Fait avec ❤️ | <a href="#">Instagram</a></p>
+  </footer>
+
+  <script src="panier.js"></script>
+  <script>
+  window.addEventListener('DOMContentLoaded', async () => {
+    const commande = JSON.parse(localStorage.getItem('rosana-commande-en-cours') || '{}');
+
+    if (!commande || !commande.panier) {
+      document.querySelector('.page-confirmation').innerHTML = `
+        <div class="icone-succes">❌</div>
+        <h2>Aucune commande trouvée</h2>
+        <p class="sous-titre">Cette page n'est accessible qu'après un paiement.</p>
+        <a href="index.html" class="btn-retour">Retour à l'accueil</a>
+      `;
+      return;
+    }
+
+    // Génère un numéro de commande unique
+    const numeroCommande = 'ROS-' + Date.now().toString().slice(-8).toUpperCase();
+    document.getElementById('numero-commande').textContent = numeroCommande;
+
+    // Articles
+    const articlesContainer = document.getElementById('articles-conf');
+    commande.panier.forEach(item => {
+      const image = localStorage.getItem('rosana-image-' + item.id);
+      articlesContainer.innerHTML += `
+        <div class="article-conf">
+          ${image
+            ? `<img src="${image}" alt="${item.nom}">`
+            : `<div style="width:45px;height:45px;border-radius:8px;background:#fdf0f3;
+                           flex-shrink:0;display:flex;align-items:center;
+                           justify-content:center;font-size:1.3rem;">🌸</div>`
+          }
+          <span class="art-nom">${item.nom} × ${item.quantite}</span>
+          <span class="art-prix">${item.prix * item.quantite}€</span>
+        </div>
+      `;
+    });
+    document.getElementById('conf-sous-total').textContent = commande.sousTotal + '€';
+
+    // Livraison
+    document.getElementById('conf-mode-livraison').textContent = commande.livraison.label;
+    document.getElementById('conf-adresse').textContent        = commande.adresse;
+    document.getElementById('conf-frais-livraison').textContent =
+      commande.prixLivraison === 0 ? 'Offerte 🎉' : commande.prixLivraison.toFixed(2) + '€';
+    document.getElementById('conf-total').textContent = commande.total.toFixed(2) + '€';
+
+    // Date
+    const date = new Date(commande.date);
+    const dateFormatee = date.toLocaleDateString('fr-FR', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+    document.getElementById('conf-date').textContent = dateFormatee;
+
+    // Avertissement si date < 2 semaines
+    const diffJours = (date - new Date()) / (1000 * 60 * 60 * 24);
+    if (diffJours < 14) {
+      document.getElementById('conf-avert-date').style.display = 'block';
+    }
+
+    // Note livraison
+    if (commande.noteLivraison) {
+      document.getElementById('conf-note-row').style.display = 'flex';
+      document.getElementById('conf-note').textContent = commande.noteLivraison;
+    }
+
+    // Coordonnées
+    document.getElementById('conf-nom').textContent   = `${commande.prenom} ${commande.nom}`;
+    document.getElementById('conf-email').textContent = commande.email;
+    document.getElementById('conf-tel').textContent   = commande.telephone;
+
+    // Envoie la commande dans Airtable
+const apercuBouquet = localStorage.getItem('rosana-image-' + (commande.panier[0]?.id || '')) || '';
+const articlesTexte = commande.panier.map(i => `${i.nom} x${i.quantite} — ${i.prix}€`).join('\n');
+
+await fetch('/save-order', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    numero:          numeroCommande,
+    prenom:          commande.prenom,
+    nom:             commande.nom,
+    email:           commande.email,
+    telephone:       commande.telephone,
+    articles:        articlesTexte,
+    motif:           localStorage.getItem('rosana-motif-' + (commande.panier[0]?.id || '')) || '',
+    couleurs:        localStorage.getItem('rosana-couleurs-' + (commande.panier[0]?.id || '')) || '',
+    recommandations: localStorage.getItem('rosana-reco-' + (commande.panier[0]?.id || '')) || '',
+    petitesFleurs:   localStorage.getItem('rosana-petitesfleurs-' + (commande.panier[0]?.id || '')) || '',
+    messageCarte:    localStorage.getItem('rosana-message-' + (commande.panier[0]?.id || '')) || '',
+    modeLivraison:   commande.livraison.label,
+    adresse:         commande.adresse,
+    dateLivraison:   commande.date,
+    noteLivraison:   commande.noteLivraison || '',
+    fraisLivraison:  commande.prixLivraison,
+    total:           commande.total,
+    apercuBouquet,
+  }),
+});
+
+    // Vide uniquement les articles de cette commande du panier
+    const idsPanier = commande.panier.map(item => String(item.id));
+    let panier = chargerPanier();
+    panier = panier.filter(item => !idsPanier.includes(String(item.id)));
+    sauvegarderPanier(panier);
+  });
+  </script>
+
+</body>
+</html>

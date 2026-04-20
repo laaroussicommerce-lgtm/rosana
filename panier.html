@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panier – Rosana</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">Rosana</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="boutique.html">Boutique</a></li>
+      <li><a href="personnaliser.html">Personnaliser</a></li>
+      <li><a href="panier.html" class="panier-btn">🛒 Panier (<span id="nb-panier">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <section class="page-panier">
+    <h2>Mon panier</h2>
+    <div id="contenu-panier">Chargement...</div>
+    <div class="total-panier">Total : <span id="total-panier">0€</span></div>
+    <button class="btn-commander" onclick="window.location.href='commande.html'">
+      Passer la commande →
+    </button>
+  </section>
+
+  <footer>
+    <p>© 2025 Rosana – Fait avec ❤️ | <a href="#">Instagram</a></p>
+  </footer>
+
+  <script src="panier.js"></script>
+  <script>
+    afficherPanier();
+  </script>
+</body>
+</html>

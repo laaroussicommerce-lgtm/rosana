@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Rosana</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-admin { max-width: 1100px; margin: 0 auto; padding: 40px 30px; }
+
+    /* LOGIN */
+    .login-wrapper {
+      max-width: 400px;
+      margin: 100px auto;
+      text-align: center;
+    }
+    .login-wrapper h2 { color: #b5546a; margin-bottom: 30px; }
+    .login-wrapper input {
+      width: 100%;
+      border: 2px solid #e8d0d5;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-family: 'Georgia', serif;
+      font-size: 1rem;
+      outline: none;
+      margin-bottom: 15px;
+      transition: border-color 0.2s;
+    }
+    .login-wrapper input:focus { border-color: #b5546a; }
+    .btn-login {
+      width: 100%;
+      background: #b5546a;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: 'Georgia', serif;
+      transition: background 0.2s;
+    }
+    .btn-login:hover { background: #9a3d55; }
+    .erreur-login {
+      color: #e74c3c;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* ADMIN */
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .admin-header h2 { color: #b5546a; font-size: 1.8rem; }
+    .btn-deconnexion {
+      background: none;
+      border: 2px solid #e8d0d5;
+      border-radius: 25px;
+      padding: 8px 20px;
+      cursor: pointer;
+      color: #999;
+      font-family: 'Georgia', serif;
+      transition: all 0.2s;
+    }
+    .btn-deconnexion:hover { border-color: #b5546a; color: #b5546a; }
+
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: #fdf8f9;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-card .stat-valeur {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #b5546a;
+      display: block;
+    }
+    .stat-card .stat-label {
+      font-size: 0.82rem;
+      color: #999;
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* FILTRES */
+    .filtres {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .btn-filtre {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 2px solid #e8d0d5;
+      background: white;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #777;
+      font-family: 'Georgia', serif;
+      transition: all 0.2s;
+    }
+    .btn-filtre.actif {
+      border-color: #b5546a;
+      background: #fdf0f3;
+      color: #b5546a;
+      font-weight: bold;
+    }
+
+    /* COMMANDES */
+    .carte-commande {
+      background: #fdf8f9;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 20px;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .carte-commande:hover { border-color: #e8d0d5; }
+
+    .commande-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .commande-numero { font-size: 1rem; font-weight: bold; color: #b5546a; }
+    .commande-date { font-size: 0.82rem; color: #999; margin-top: 3px; }
+
+    .badge-statut {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .badge-statut.en-attente  { background: #fff3cd; color: #856404; }
+    .badge-statut.preparation { background: #cce5ff; color: #004085; }
+    .badge-statut.expediee    { background: #d4edda; color: #155724; }
+
+    .commande-corps {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .bloc-info-admin h4 {
+      font-size: 0.82rem;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .bloc-info-admin p {
+      font-size: 0.88rem;
+      color: #2c2c2c;
+      line-height: 1.6;
+    }
+
+    .articles-admin {
+      grid-column: 1 / -1;
+      border-top: 1px solid #f0e6e6;
+      padding-top: 15px;
+      margin-top: 5px;
+    }
+    .articles-admin h4 {
+      font-size: 0.82rem;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .article-admin {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      color: #555;
+      padding: 5px 0;
+      border-bottom: 1px solid #fdf0f3;
+    }
+    .article-admin:last-child { border-bottom: none; }
+    .total-admin {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      color: #b5546a;
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+
+    .extras-admin {
+      grid-column: 1 / -1;
+      background: #fff8f9;
+      border-radius: 10px;
+      padding: 12px 15px;
+      font-size: 0.85rem;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    .chargement {
+      text-align: center;
+      color: #999;
+      padding: 60px;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .commande-corps { grid-template-columns: 1fr; }
+      .articles-admin { grid-column: 1; }
+      .extras-admin { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">Rosana</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+    </ul>
+  </nav>
+
+  <!-- LOGIN -->
+  <div id="login-section">
+    <div class="login-wrapper">
+      <h2>🔐 Espace admin</h2>
+      <input type="password" id="input-mdp"
+        placeholder="Mot de passe"
+        onkeydown="if(event.key==='Enter') seConnecter()">
+      <button class="btn-login" onclick="seConnecter()">Accéder</button>
+      <p class="erreur-login" id="erreur-login">Mot de passe incorrect.</p>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="admin-section" style="display:none;">
+    <div class="page-admin">
+
+      <div class="admin-header">
+        <div>
+          <h2>Tableau de bord</h2>
+          <p style="color:#999;font-size:0.88rem;">Toutes les commandes Rosana</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn-login" style="width:auto;padding:10px 20px;"
+            onclick="chargerCommandes()">🔄 Actualiser</button>
+          <button class="btn-deconnexion" onclick="seDeconnecter()">Déconnexion</button>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats">
+        <div class="stat-card">
+          <span class="stat-valeur" id="stat-total">–</span>
+          <span class="stat-label">Commandes totales</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-valeur" id="stat-attente">–</span>
+          <span class="stat-label">En attente</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-valeur" id="stat-ca">–</span>
+          <span class="stat-label">Chiffre d'affaires</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-valeur" id="stat-moy">–</span>
+          <span class="stat-label">Panier moyen</span>
+        </div>
+      </div>
+
+      <!-- FILTRES -->
+      <div class="filtres">
+        <button class="btn-filtre actif" onclick="filtrer('tous')">Toutes</button>
+        <button class="btn-filtre" onclick="filtrer('en-attente')">En attente</button>
+        <button class="btn-filtre" onclick="filtrer('preparation')">En préparation</button>
+        <button class="btn-filtre" onclick="filtrer('expediee')">Expédiées</button>
+      </div>
+
+      <!-- LISTE COMMANDES -->
+      <div id="liste-commandes">
+        <div class="chargement">Chargement des commandes...</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  // ===== MOT DE PASSE =====
+  // Change ce mot de passe par le tien !
+  const MOT_DE_PASSE = 'rosana2025';
+
+  let toutesCommandes = [];
+  let statutsLocaux = {};
+  let filtreActif = 'tous';
+
+  function seConnecter() {
+    const mdp = document.getElementById('input-mdp').value;
+    if (mdp === MOT_DE_PASSE) {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('admin-section').style.display = 'block';
+      localStorage.setItem('rosana-admin', '1');
+      chargerCommandes();
+    } else {
+      document.getElementById('erreur-login').style.display = 'block';
+    }
+  }
+
+  function seDeconnecter() {
+    localStorage.removeItem('rosana-admin');
+    document.getElementById('login-section').style.display = 'block';
+    document.getElementById('admin-section').style.display = 'none';
+    document.getElementById('input-mdp').value = '';
+  }
+
+  // Auto-login si déjà connecté
+  if (localStorage.getItem('rosana-admin') === '1') {
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('admin-section').style.display = 'block';
+    chargerCommandes();
+  }
+
+  // ===== CHARGEMENT COMMANDES =====
+  async function chargerCommandes() {
+    document.getElementById('liste-commandes').innerHTML =
+      '<div class="chargement">⏳ Chargement des commandes...</div>';
+
+    try {
+      const response = await fetch('/get-orders');
+      const data = await response.json();
+
+      if (data.erreur) throw new Error(data.erreur);
+
+      // Charge les statuts sauvegardés localement
+      statutsLocaux = JSON.parse(localStorage.getItem('rosana-statuts') || '{}');
+
+      // Applique les statuts locaux
+      toutesCommandes = data.map(c => ({
+        ...c,
+        statutLocal: statutsLocaux[c.id] || 'en-attente',
+      }));
+
+      mettreAJourStats();
+      afficherCommandes();
+
+    } catch (err) {
+      document.getElementById('liste-commandes').innerHTML =
+        `<div class="chargement" style="color:#e74c3c;">
+          Erreur : ${err.message}
+        </div>`;
+    }
+  }
+
+  // ===== STATS =====
+  function mettreAJourStats() {
+    const payees = toutesCommandes.filter(c => c.statut === 'paid');
+    const enAttente = toutesCommandes.filter(c => c.statutLocal === 'en-attente');
+    const ca = payees.reduce((s, c) => s + parseFloat(c.total), 0);
+    const moy = payees.length > 0 ? (ca / payees.length).toFixed(2) : 0;
+
+    document.getElementById('stat-total').textContent   = toutesCommandes.length;
+    document.getElementById('stat-attente').textContent = enAttente.length;
+    document.getElementById('stat-ca').textContent      = ca.toFixed(2) + '€';
+    document.getElementById('stat-moy').textContent     = moy + '€';
+  }
+
+  // ===== FILTRES =====
+  function filtrer(filtre) {
+    filtreActif = filtre;
+    document.querySelectorAll('.btn-filtre').forEach(b => b.classList.remove('actif'));
+    event.target.classList.add('actif');
+    afficherCommandes();
+  }
+
+  // ===== AFFICHAGE =====
+  function afficherCommandes() {
+    let commandes = toutesCommandes;
+
+    if (filtreActif !== 'tous') {
+      commandes = commandes.filter(c => c.statutLocal === filtreActif);
+    }
+
+    if (commandes.length === 0) {
+      document.getElementById('liste-commandes').innerHTML =
+        '<div class="chargement">Aucune commande dans cette catégorie.</div>';
+      return;
+    }
+
+    document.getElementById('liste-commandes').innerHTML =
+      commandes.map(c => carteCommande(c)).join('');
+  }
+
+  function carteCommande(c) {
+    const badgeClass = c.statutLocal === 'en-attente' ? 'en-attente'
+      : c.statutLocal === 'preparation' ? 'preparation' : 'expediee';
+    const badgeLabel = c.statutLocal === 'en-attente' ? '⏳ En attente'
+      : c.statutLocal === 'preparation' ? '🔧 En préparation' : '📦 Expédiée';
+
+    const articles = c.articles.map(a => `
+      <div class="article-admin">
+        <span>${a.nom} × ${a.quantite}</span>
+        <span>${a.prix}€</span>
+      </div>
+    `).join('');
+
+    const extras = [
+      c.recommandations ? `📝 Recommandations : ${c.recommandations}` : '',
+      c.petitesFleurs   ? `🌸 Petites fleurs : ${c.petitesFleurs}` : '',
+      c.message         ? `💌 Message carte : ${c.message}` : '',
+      c.note            ? `📌 Note livraison : ${c.note}` : '',
+    ].filter(Boolean).join('<br>');
+
+    // Alerte date proche
+    const dateLiv = new Date(c.dateLivraison);
+    const diffJours = (dateLiv - new Date()) / (1000 * 60 * 60 * 24);
+    const alerteDate = c.dateLivraison && diffJours < 7
+      ? `<span style="color:#e74c3c;font-weight:bold;">⚠️ Livraison dans moins de 7 jours !</span><br>`
+      : '';
+
+    return `
+      <div class="carte-commande" id="commande-${c.id}">
+        <div class="commande-header">
+          <div>
+            <div class="commande-numero">${c.numero}</div>
+            <div class="commande-date">Commandé le ${c.date}</div>
+          </div>
+          <select class="badge-statut ${badgeClass}"
+            onchange="changerStatut('${c.id}', this.value, this)"
+            style="border:none;cursor:pointer;font-family:'Georgia',serif;">
+            <option value="en-attente"  ${c.statutLocal==='en-attente'  ? 'selected':''}>⏳ En attente</option>
+            <option value="preparation" ${c.statutLocal==='preparation' ? 'selected':''}>🔧 En préparation</option>
+            <option value="expediee"    ${c.statutLocal==='expediee'    ? 'selected':''}>📦 Expédiée</option>
+          </select>
+        </div>
+
+        <div class="commande-corps">
+          <div class="bloc-info-admin">
+            <h4>Client</h4>
+            <p>
+              <strong>${c.client}</strong><br>
+              ${c.email}<br>
+              ${c.telephone}
+            </p>
+          </div>
+          <div class="bloc-info-admin">
+            <h4>Livraison</h4>
+            <p>
+              ${alerteDate}
+              <strong>${c.modeLivraison}</strong><br>
+              ${c.adresse}<br>
+              📅 ${c.dateLivraison
+                ? new Date(c.dateLivraison).toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'})
+                : '–'}
+            </p>
+          </div>
+
+          <div class="articles-admin">
+            <h4>Articles</h4>
+            ${articles}
+            <div class="total-admin">
+              <span>Total payé</span>
+              <span>${c.total}€</span>
+            </div>
+          </div>
+
+          ${extras ? `
+            <div class="extras-admin">
+              <strong style="display:block;margin-bottom:5px;color:#b5546a;">
+                Détails personnalisation
+              </strong>
+              ${extras}
+            </div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  // ===== CHANGER STATUT =====
+  function changerStatut(id, nouveauStatut, selectEl) {
+    statutsLocaux[id] = nouveauStatut;
+    localStorage.setItem('rosana-statuts', JSON.stringify(statutsLocaux));
+
+    // Met à jour la couleur du badge
+    selectEl.className = `badge-statut ${nouveauStatut}`;
+
+    // Met à jour dans le tableau
+    const commande = toutesCommandes.find(c => c.id === id);
+    if (commande) commande.statutLocal = nouveauStatut;
+
+    mettreAJourStats();
+  }
+  </script>
+
+</body>
+</html>
