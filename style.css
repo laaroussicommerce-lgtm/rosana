@@ -428,13 +428,76 @@ footer a { color: #b5546a; }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  .navbar { padding: 15px 20px; flex-direction: column; gap: 15px; }
-  .hero { padding: 40px 20px; text-align: center; }
-  .hero-texte h1 { font-size: 2rem; }
-  .arguments { grid-template-columns: repeat(2, 1fr); padding: 40px 20px; }
-  .grille-produits { grid-template-columns: 1fr; }
-  .catalogue { padding: 40px 20px; }
-  .grille-tailles { grid-template-columns: repeat(2, 1fr); }
-  .page-panier { padding: 40px 20px; }
-  .personnalisation { padding: 40px 20px; }
+  .navbar {
+    padding: 12px 15px;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .nav-links li a {
+    font-size: 0.85rem;
+  }
+  .panier-btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  .hero {
+    padding: 40px 20px;
+    text-align: center;
+    min-height: auto;
+  }
+  .hero-texte h1 {
+    font-size: 2rem;
+  }
+  .hero-texte p {
+    font-size: 1rem;
+  }
+  .btn-principal, .btn-secondaire {
+    display: block;
+    text-align: center;
+    margin: 10px auto;
+    width: 100%;
+    max-width: 300px;
+  }
+  .btn-principal {
+    margin-right: 0;
+  }
+  .arguments {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 40px 20px;
+    gap: 15px;
+  }
+  .grille-produits {
+    grid-template-columns: 1fr;
+  }
+  .catalogue {
+    padding: 40px 20px;
+  }
+  .grille-tailles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .page-panier {
+    padding: 40px 20px;
+  }
+  .personnalisation {
+    padding: 40px 20px;
+  }
+  .page-commande {
+    padding: 40px 20px;
+  }
+  .deux-colonnes {
+    grid-template-columns: 1fr;
+  }
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .commande-corps {
+    grid-template-columns: 1fr;
+  }
 }
