@@ -1,15 +1,17 @@
-import Stripe from 'stripe';
-
 export async function onRequestGet(context) {
   try {
-    const stripe = new Stripe(context.env.STRIPE_SECRET_KEY);
+    const response = await fetch(
+      'https://api.stripe.com/v1/checkout/sessions?limit=50&expand[]=data.line_items',
+      {
+        headers: {
+          'Authorization': `Bearer ${context.env.STRIPE_SECRET_KEY}`,
+        },
+      }
+    );
 
-    const sessions = await stripe.checkout.sessions.list({
-      limit: 50,
-      expand: ['data.line_items'],
-    });
+    const data = await response.json();
 
-    const commandes = sessions.data.map(session => ({
+    const commandes = data.data.map(session => ({
       id:            session.id,
       numero:        'ROS-' + session.id.slice(-8).toUpperCase(),
       date:          new Date(session.created * 1000).toLocaleDateString('fr-FR'),
@@ -22,7 +24,7 @@ export async function onRequestGet(context) {
       note:          session.metadata?.note || '',
       total:         (session.amount_total / 100).toFixed(2),
       statut:        session.payment_status === 'paid' ? 'paid' : 'pending',
-      articles:      session.line_items?.data.map(item => ({
+      articles:      session.line_items?.data?.map(item => ({
         nom:      item.description,
         quantite: item.quantity,
         prix:     (item.amount_total / 100).toFixed(2),
