@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentions légales – Rosana</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-legale {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 30px;
+    }
+    .page-legale h2 {
+      font-size: 2rem;
+      color: #b5546a;
+      margin-bottom: 40px;
+    }
+    .page-legale h3 {
+      font-size: 1.1rem;
+      color: #b5546a;
+      margin: 30px 0 12px;
+    }
+    .page-legale p {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+    .placeholder {
+      background: #fff3cd;
+      border: 1px solid #f1c40f;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 0.85rem;
+      color: #856404;
+    }
+    .onglets-legaux {
+      display: flex;
+      gap: 0;
+      margin-bottom: 40px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #e8d0d5;
+    }
+    .btn-onglet-legal {
+      flex: 1;
+      padding: 12px;
+      background: white;
+      border: none;
+      cursor: pointer;
+      font-family: 'Georgia', serif;
+      font-size: 0.88rem;
+      color: #777;
+      transition: all 0.2s;
+      border-right: 1px solid #e8d0d5;
+    }
+    .btn-onglet-legal:last-child { border-right: none; }
+    .btn-onglet-legal.actif {
+      background: #b5546a;
+      color: white;
+      font-weight: bold;
+    }
+    .contenu-legal { display: none; }
+    .contenu-legal.actif { display: block; }
+    @media (max-width: 600px) {
+      .page-legale { padding: 40px 20px; }
+      .onglets-legaux { flex-direction: column; }
+      .btn-onglet-legal { border-right: none; border-bottom: 1px solid #e8d0d5; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">Rosana</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="boutique.html">Boutique</a></li>
+      <li><a href="personnaliser.html">Personnaliser</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="panier.html" class="panier-btn">🛒 Panier (<span id="nb-panier">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-legale">
+    <h2>Informations légales</h2>
+
+    <div class="onglets-legaux">
+      <button class="btn-onglet-legal actif" onclick="afficherOnglet('mentions')">Mentions légales</button>
+      <button class="btn-onglet-legal" onclick="afficherOnglet('cgv')">CGV</button>
+      <button class="btn-onglet-legal" onclick="afficherOnglet('rgpd')">Politique de confidentialité</button>
+    </div>
+
+    <!-- MENTIONS LÉGALES -->
+    <div class="contenu-legal actif" id="onglet-mentions">
+
+      <h3>Éditeur du site</h3>
+      <p>
+        Le site byrosana.pages.dev est édité par :<br>
+        <strong>Ilyes Laaroussi</strong>, auto-entrepreneur<br>
+        SIRET : <span class="placeholder">À compléter lors de l'immatriculation</span><br>
+        Adresse : <span class="placeholder">À compléter</span><br>
+        Email : <a href="mailto:laaroussi.commerce@gmail.com" style="color:#b5546a;">laaroussi.commerce@gmail.com</a>
+      </p>
+
+      <h3>Hébergement</h3>
+      <p>
+        Le site est hébergé par :<br>
+        <strong>Cloudflare, Inc.</strong><br>
+        101 Townsend St, San Francisco, CA 94107, États-Unis<br>
+        <a href="https://www.cloudflare.com" style="color:#b5546a;">cloudflare.com</a>
+      </p>
+
+      <h3>Propriété intellectuelle</h3>
+      <p>
+        L'ensemble du contenu de ce site (textes, images, logos, visuels) est la propriété exclusive de Rosana.
+        Toute reproduction, même partielle, est strictement interdite sans autorisation préalable.
+      </p>
+
+      <h3>Responsabilité</h3>
+      <p>
+        Rosana s'efforce de maintenir les informations du site à jour et exactes.
+        Cependant, Rosana ne peut être tenu responsable des erreurs, omissions ou résultats
+        obtenus par l'utilisation de ces informations.
+      </p>
+
+    </div>
+
+    <!-- CGV -->
+    <div class="contenu-legal" id="onglet-cgv">
+
+      <h3>1. Objet</h3>
+      <p>
+        Les présentes Conditions Générales de Vente (CGV) régissent les ventes de bouquets de fleurs
+        synthétiques réalisées sur le site byrosana.pages.dev entre Rosana (le vendeur) et tout client
+        (l'acheteur) passant commande sur le site.
+      </p>
+
+      <h3>2. Produits</h3>
+      <p>
+        Rosana propose des bouquets de fleurs synthétiques fabriqués à la main en France.
+        Les fleurs synthétiques sont durables et ne fanent pas. Les couleurs affichées sur le site
+        peuvent légèrement varier selon les écrans.
+      </p>
+
+      <h3>3. Prix</h3>
+      <p>
+        Les prix sont indiqués en euros TTC. Rosana se réserve le droit de modifier ses prix
+        à tout moment. Les commandes sont facturées au prix en vigueur au moment de la validation.
+      </p>
+
+      <h3>4. Commande</h3>
+      <p>
+        La commande est validée après paiement complet. Un numéro de commande est attribué
+        automatiquement et affiché sur la page de confirmation. Le client s'engage à fournir
+        des informations exactes lors de la commande.
+      </p>
+
+      <h3>5. Paiement</h3>
+      <p>
+        Le paiement s'effectue en ligne via Stripe, plateforme sécurisée. Les données bancaires
+        ne sont jamais stockées par Rosana. Les moyens de paiement acceptés sont les cartes
+        bancaires Visa, Mastercard et American Express.
+      </p>
+
+      <h3>6. Livraison</h3>
+      <p>
+        Les commandes sont expédiées en France métropolitaine uniquement via :<br>
+        — <strong>Mondial Relay</strong> : 3,99€ (offert dès 40€ d'achat)<br>
+        — <strong>Colissimo</strong> : 5,99€ (2,99€ dès 40€ d'achat)<br><br>
+        Les délais de livraison sont estimatifs. Pour garantir la livraison à une date souhaitée,
+        il est recommandé de commander au moins <strong>2 semaines à l'avance</strong>.
+        Rosana ne peut être tenu responsable des retards imputables aux transporteurs.
+      </p>
+
+      <h3>7. Droit de rétractation</h3>
+      <p>
+        Conformément à l'article L221-28 du Code de la consommation :<br><br>
+        — Les <strong>bouquets personnalisés</strong> (couleurs, motifs, compositions sur mesure)
+        sont exemptés du droit de rétractation car fabriqués selon les spécifications du client.<br><br>
+        — Les <strong>bouquets standard</strong> (non personnalisés) bénéficient d'un délai de
+        rétractation de <strong>14 jours</strong> à compter de la réception. Le retour est à la
+        charge du client. Le remboursement est effectué dans les 14 jours suivant la réception
+        du retour, dans le même moyen de paiement que l'achat.
+      </p>
+
+      <h3>8. Réclamations</h3>
+      <p>
+        Pour toute réclamation, contactez-nous via le formulaire de contact ou par email à
+        <a href="mailto:laaroussi.commerce@gmail.com" style="color:#b5546a;">laaroussi.commerce@gmail.com</a>.
+        Nous nous engageons à répondre dans les 48h ouvrées.
+      </p>
+
+      <h3>9. Droit applicable</h3>
+      <p>
+        Les présentes CGV sont soumises au droit français. En cas de litige,
+        les tribunaux français seront compétents.
+      </p>
+
+    </div>
+
+    <!-- RGPD -->
+    <div class="contenu-legal" id="onglet-rgpd">
+
+      <h3>1. Responsable du traitement</h3>
+      <p>
+        <strong>Ilyes Laaroussi</strong> – Rosana<br>
+        Email : <a href="mailto:laaroussi.commerce@gmail.com" style="color:#b5546a;">laaroussi.commerce@gmail.com</a>
+      </p>
+
+      <h3>2. Données collectées</h3>
+      <p>
+        Lors d'une commande, nous collectons : nom, prénom, email, téléphone, adresse de livraison.
+        Ces données sont nécessaires au traitement et à l'expédition de votre commande.
+      </p>
+
+      <h3>3. Utilisation des données</h3>
+      <p>
+        Vos données sont utilisées uniquement pour :<br>
+        — Traiter et expédier votre commande<br>
+        — Vous contacter en cas de problème avec votre commande<br>
+        — Respecter nos obligations légales<br><br>
+        Vos données ne sont jamais vendues ni partagées avec des tiers à des fins commerciales.
+      </p>
+
+      <h3>4. Conservation des données</h3>
+      <p>
+        Vos données sont conservées pendant 3 ans à compter de votre dernière commande,
+        conformément aux obligations légales françaises.
+      </p>
+
+      <h3>5. Cookies</h3>
+      <p>
+        Ce site utilise le localStorage de votre navigateur uniquement pour gérer votre panier.
+        Aucun cookie de tracking ou publicitaire n'est utilisé.
+      </p>
+
+      <h3>6. Prestataires tiers</h3>
+      <p>
+        Nous utilisons les services suivants :<br>
+        — <strong>Stripe</strong> (paiement) : vos données bancaires sont traitées par Stripe
+        et ne sont jamais stockées par Rosana.<br>
+        — <strong>Cloudflare</strong> (hébergement) : les données transitent par les serveurs Cloudflare.<br>
+        — <strong>Mondial Relay / Colissimo</strong> (livraison) : votre adresse est transmise
+        au transporteur choisi.
+      </p>
+
+      <h3>7. Vos droits</h3>
+      <p>
+        Conformément au RGPD, vous disposez des droits suivants :<br>
+        — Droit d'accès à vos données<br>
+        — Droit de rectification<br>
+        — Droit à l'effacement<br>
+        — Droit à la portabilité<br><br>
+        Pour exercer ces droits, contactez-nous à
+        <a href="mailto:laaroussi.commerce@gmail.com" style="color:#b5546a;">laaroussi.commerce@gmail.com</a>.
+        Nous répondrons dans un délai de 30 jours.
+      </p>
+
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2025 Rosana – Fait avec ❤️ |
+      <a href="#">Instagram</a> |
+      <a href="legal.html">Mentions légales</a> |
+      <a href="legal.html?onglet=cgv">CGV</a> |
+      <a href="legal.html?onglet=rgpd">Confidentialité</a>
+    </p>
+  </footer>
+
+  <script src="panier.js"></script>
+  <script>
+  function afficherOnglet(id) {
+    document.querySelectorAll('.contenu-legal').forEach(c => c.classList.remove('actif'));
+    document.querySelectorAll('.btn-onglet-legal').forEach(b => b.classList.remove('actif'));
+    document.getElementById('onglet-' + id).classList.add('actif');
+    event.target.classList.add('actif');
+  }
+
+  // Ouvre directement le bon onglet si paramètre dans l'URL
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const onglet = params.get('onglet');
+    if (onglet) {
+      document.querySelectorAll('.contenu-legal').forEach(c => c.classList.remove('actif'));
+      document.querySelectorAll('.btn-onglet-legal').forEach(b => b.classList.remove('actif'));
+      document.getElementById('onglet-' + onglet)?.classList.add('actif');
+      document.querySelectorAll('.btn-onglet-legal')[
+        onglet === 'mentions' ? 0 : onglet === 'cgv' ? 1 : 2
+      ]?.classList.add('actif');
+    }
+  });
+  </script>
+
+</body>
+</html>
