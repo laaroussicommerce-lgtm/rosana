@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact – Rosana</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-contact {
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 60px 30px;
+    }
+    .page-contact h2 {
+      font-size: 2rem;
+      color: #b5546a;
+      margin-bottom: 10px;
+    }
+    .page-contact .sous-titre {
+      color: #999;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    .champ { margin-bottom: 20px; }
+    .champ label {
+      display: block;
+      font-size: 0.88rem;
+      color: #555;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    .champ input, .champ select, .champ textarea {
+      width: 100%;
+      border: 2px solid #e8d0d5;
+      border-radius: 12px;
+      padding: 12px 15px;
+      font-family: 'Georgia', serif;
+      font-size: 0.95rem;
+      color: #2c2c2c;
+      outline: none;
+      transition: border-color 0.2s;
+      background: white;
+    }
+    .champ input:focus,
+    .champ select:focus,
+    .champ textarea:focus { border-color: #b5546a; }
+    .champ textarea { height: 150px; resize: vertical; }
+    .deux-colonnes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    .btn-envoyer {
+      width: 100%;
+      background: #b5546a;
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-family: 'Georgia', serif;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 10px;
+    }
+    .btn-envoyer:hover { background: #9a3d55; }
+    .btn-envoyer:disabled { background: #ccc; cursor: not-allowed; }
+    .message-succes {
+      display: none;
+      background: #e8f8f0;
+      border: 1px solid #27ae60;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      color: #1a6b3a;
+      margin-top: 20px;
+    }
+    .message-succes.visible { display: block; }
+    .message-erreur {
+      display: none;
+      background: #fdf0f0;
+      border: 1px solid #e74c3c;
+      border-radius: 12px;
+      padding: 15px;
+      color: #c0392b;
+      margin-top: 15px;
+      font-size: 0.88rem;
+    }
+    .message-erreur.visible { display: block; }
+    .infos-contact {
+      background: #fdf8f9;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 35px;
+    }
+    .infos-contact p {
+      font-size: 0.9rem;
+      color: #555;
+      line-height: 1.8;
+    }
+    .infos-contact a { color: #b5546a; }
+    @media (max-width: 600px) {
+      .deux-colonnes { grid-template-columns: 1fr; }
+      .page-contact { padding: 40px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">Rosana</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="boutique.html">Boutique</a></li>
+      <li><a href="personnaliser.html">Personnaliser</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="panier.html" class="panier-btn">🛒 Panier (<span id="nb-panier">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-contact">
+    <h2>Nous contacter</h2>
+    <p class="sous-titre">
+      Une question sur une commande, un bouquet sur mesure ou simplement envie d'échanger ?
+      On vous répond dans les plus brefs délais.
+    </p>
+
+    <div class="infos-contact">
+      <p>
+        📸 Instagram : <a href="#" id="lien-instagram">@byrosana</a><br>
+        ⏱️ Délai de réponse : sous 24h<br>
+        📦 Pour suivre une commande, précise ton numéro de commande dans le message.
+      </p>
+    </div>
+
+    <form id="form-contact" onsubmit="envoyerMessage(event)">
+      <div class="deux-colonnes">
+        <div class="champ">
+          <label>Prénom et nom *</label>
+          <input type="text" id="nom" placeholder="Sophie Dupont" required>
+        </div>
+        <div class="champ">
+          <label>Email *</label>
+          <input type="email" id="email" placeholder="sophie@email.com" required>
+        </div>
+      </div>
+
+      <div class="champ">
+        <label>Téléphone</label>
+        <input type="tel" id="telephone" placeholder="06 12 34 56 78">
+      </div>
+
+      <div class="champ">
+        <label>Sujet *</label>
+        <select id="sujet" required>
+          <option value="">Choisir un sujet...</option>
+          <option value="Question sur une commande">Question sur une commande</option>
+          <option value="Bouquet sur mesure">Bouquet sur mesure</option>
+          <option value="Délai de livraison">Délai de livraison</option>
+          <option value="Retour / Remboursement">Retour / Remboursement</option>
+          <option value="Autre">Autre</option>
+        </select>
+      </div>
+
+      <div class="champ">
+        <label>Message *</label>
+        <textarea id="message"
+          placeholder="Décris ta demande en détail..."
+          required></textarea>
+      </div>
+
+      <button type="submit" class="btn-envoyer" id="btn-envoyer">
+        Envoyer le message →
+      </button>
+    </form>
+
+    <div class="message-succes" id="message-succes">
+      ✅ <strong>Message envoyé !</strong><br>
+      Nous vous répondrons dans les plus brefs délais.
+    </div>
+
+    <div class="message-erreur" id="message-erreur">
+      ❌ Une erreur est survenue. Réessaie ou contacte-nous directement sur Instagram.
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Rosana – Fait avec ❤️ | <a href="#">Instagram</a></p>
+  </footer>
+
+  <script src="panier.js"></script>
+  <script>
+  async function envoyerMessage(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-envoyer');
+    btn.disabled = true;
+    btn.textContent = '⏳ Envoi en cours...';
+
+    const data = {
+      nom:       document.getElementById('nom').value.trim(),
+      email:     document.getElementById('email').value.trim(),
+      telephone: document.getElementById('telephone').value.trim(),
+      sujet:     document.getElementById('sujet').value,
+      message:   document.getElementById('message').value.trim(),
+    };
+
+    try {
+      const response = await fetch('/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        document.getElementById('form-contact').style.display = 'none';
+        document.getElementById('message-succes').classList.add('visible');
+      } else {
+        throw new Error(result.erreur || 'Erreur inconnue');
+      }
+    } catch (err) {
+      document.getElementById('message-erreur').classList.add('visible');
+      btn.disabled = false;
+      btn.textContent = 'Envoyer le message →';
+    }
+  }
+  </script>
+
+</body>
+</html>
